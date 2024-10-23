@@ -1,60 +1,32 @@
-// React
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import ReactDOM from "react-dom/client";
-
-// Components
 import Home from "./component/home.jsx";
-import StartStopButtons from "./component/StartStopButtons.jsx";
 
+const App = () => {
+    const [isRunning, setIsRunning] = useState(true);
+    const [counter, setCounter] = useState(0);
+    const [startNumber, setStartNumber] = useState(1000);
 
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (isRunning) {
+                setCounter((prevCounter) => prevCounter + 1);
+                setStartNumber((prevStartNumber) => prevStartNumber - 1);
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, [isRunning]); 
 
-//Create root and INITIAL RENDER with buttons
+    return (
+        <Home 
+            startNumber={startNumber} 
+            counter={counter} 
+            isRunning={isRunning} 
+            setIsRunning={setIsRunning}
+        />
+    );
+};
+
+// Create root and INITIAL RENDER
 const root = ReactDOM.createRoot(document.getElementById('app'));
-// root.render(
-//     <Home startNumber={startNumber} counter={counter}/>,
-//     <StartStopButtons />
-// )
-
-
-//FUNCTIONS
-function start(){
-    setIsRunning(true);
-    startTimeRef.current = Date.now() - elapsedTime;
-
-
-}
-
-function stop(){
-    setIsRunning(false);
-}
-
-
-
-// VARIABLES
-// const [isRunning, setIsRunning]  = useState(true);
-let isRunning = true;
-let startNumber = 1000;
-let counter = 0;
-
-
-setInterval(function() {
-    //Update variables and Re-render root every second 
-    if (isRunning) {
-        root.render(
-            <Home startNumber={startNumber} counter={counter}/>,
-        <StartStopButtons />)
-                counter++; 
-                startNumber--; 
-    }
-    else {
-        
-    }
-        
-}, 1000)
-
-
-
-
-
-
-
+root.render(<App />);
